@@ -1,0 +1,12 @@
+
+data/.DS_Store
+.DS_Store
+*.cpg
+*.dbf
+*.prj
+*.shp
+*.xml
+*.shx
+*.csv
+*.xlsx
+*.sav
