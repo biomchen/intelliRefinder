@@ -16,7 +16,7 @@ from sklearn.preprocessing import FunctionTransformer
 DATA_hmda_acs = 'data/hmda_acs_merged.csv'
 DATA_zip_tract = 'data/zip_tract_122017.xlsx'
 DATA_shp = 'data/2019/tl_2019_53_tract.shp'
-MODEL_path = '/models/finalized_model.sav'
+MODEL_path = 'models/finalized_model.sav'
 
 #sscaler = StandardScaler()
 transformer = FunctionTransformer(np.log1p, validate=True)
