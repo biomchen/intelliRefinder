@@ -34,16 +34,11 @@ st.markdown('''Finding refinance opportunities for mortgage lenders using
                machine learning algorithms.
             ''')
 
-st.markdown('''The hundreds of GBs data of the
-               projects were collected via Home Mortgage Disclosure Act and
-               Census American Community Survey.
-            ''')
-
 zipcodes = pd.read_csv(DATA_zipcodes)['zip']
 algorithms = ('Logistic Regression', 'Random Forest')
 interventions = ('Non-human', 'Human-first')
 
-st.sidebar.markdown('Options')
+st.sidebar.markdown('Data availability: King County, WA')
 zipcode = st.sidebar.selectbox('Please select zip code', zipcodes)
 algo = st.sidebar.selectbox('Select algorithm', algorithms)
 itvn = st.sidebar.selectbox('Intervention',interventions)
