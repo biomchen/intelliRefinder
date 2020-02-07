@@ -119,13 +119,14 @@ def map_plot(geo_data, data):
     lat = geo_data['INTPTLAT'].astype(float).mean()
     lon = geo_data['INTPTLON'].astype(float).mean()
     plot = folium.Map([lat, lon],
-                      zoom_start=9)
+                      zoom_start=11)
     plot.choropleth(geo_data=geo_data,
                     name='choropleth',
                     data=data,
                     columns=['census_tract_number', 'Refinance_score'],
                     key_on='feature.properties.census_tract',
-                    fill_color='YlOrRd',
+                    fill_color='YlGnBu',
+                    legend_name='Mortgage refinance score',
                     na_fill_color='white',
                     na_fill_opacity=0.2,
                     fill_opacity=0.7,
