@@ -10,3 +10,4 @@ data/.DS_Store
 *.csv
 *.xlsx
 *.sav
+*.pyc
