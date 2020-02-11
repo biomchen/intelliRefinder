@@ -11,7 +11,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import FunctionTransformer
 
-# Model saved in pickle
+# data directory
 DATA_hmda_acs = 'hmda_acs_merged.csv'
 DATA_zip_tract = 'zip_tract_122017.xlsx'
 DATA_shp = '2019/tl_2019_53_tract.shp'
