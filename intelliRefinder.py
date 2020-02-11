@@ -12,14 +12,14 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import FunctionTransformer
 
 # data directory
-DATA_hmda_acs = 'data/hmda_acs_merged.csv'
-DATA_zip_tract = 'data/zip_tract_122017.xlsx'
-DATA_shp = 'data/2019/tl_2019_53_tract.shp'
-DATA_zipcodes = 'data/zipcodes_king.csv'
-MODEL_lr_nh = 'data/lr_model_nh.sav'
-MODEL_lr_hf = 'data/lr_model_hf.sav'
-MODEL_rf_nh = 'data/rf_model_nh.sav'
-MODEL_rf_hf = 'data/rf_model_hf.sav'
+DATA_hmda_acs = 'hmda_acs_merged.csv'
+DATA_zip_tract = 'zip_tract_122017.xlsx'
+DATA_shp = '2019/tl_2019_53_tract.shp'
+DATA_zipcodes = 'zipcodes_king.csv'
+MODEL_lr_nh = 'lr_model_nh.sav'
+MODEL_lr_hf = 'lr_model_hf.sav'
+MODEL_rf_nh = 'rf_model_nh.sav'
+MODEL_rf_hf = 'rf_model_hf.sav'
 
 # dictionary of models
 model_dict = {
