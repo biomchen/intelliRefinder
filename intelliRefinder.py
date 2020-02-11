@@ -21,24 +21,29 @@ MODEL_lr_hf = 'lr_model_hf.sav'
 MODEL_rf_nh = 'rf_model_nh.sav'
 MODEL_rf_hf = 'rf_model_hf.sav'
 
+# dictionary of models
 model_dict = {
     'Logistic Regression': {'Non-human': MODEL_lr_nh, 'Human-first': MODEL_lr_hf},
     'Random Forest': {'Non-human': MODEL_rf_nh, 'Human-first': MODEL_rf_hf}
 }
 
+# transform the feature vectors
 transformer = FunctionTransformer(np.log1p, validate=True)
 scaler = MinMaxScaler(feature_range=(0.2, 0.8))
 
+# set the title of web app
 st.title('intelliRefinder')
 st.markdown(
     '''Finding refinance opportunities for mortgage lenders using
        machine learning algorithms.
     ''')
 
+# load zip codes of king county WA
 zipcodes = pd.read_csv(DATA_zipcodes)['zip']
 algorithms = ('Logistic Regression', 'Random Forest')
 interventions = ('Non-human', 'Human-first')
 
+# seting up the sidebar and loading the data
 st.sidebar.markdown('Data availability: King County, WA')
 zipcode = st.sidebar.selectbox('Please select zip code', zipcodes)
 algo = st.sidebar.selectbox('Select algorithm', algorithms)
@@ -65,18 +70,6 @@ def zip2tract(state_code=53):
         z2t.update({row[0]: ts['tract']})
     return z2t
 
-def get_tract(zipcode):
-    zipcode = int(zipcode)
-    return zip2tract()[zipcode]
-
-def select_model(algo, itvn):
-    return model_dict[algo][itvn]
-
-#@st.cache(persist=True, suppress_st_warning=True)
-def load_model(algo, itvn):
-    model_path = select_model(algo, itvn)
-    return pickle.load(open(model_path, 'rb'))
-
 @st.cache(persist=True, suppress_st_warning=True)
 def load_data(itvn):
     df = pd.read_csv(DATA_hmda_acs)
@@ -91,6 +84,26 @@ def load_data(itvn):
         df.drop(ethical_related, axis=1, inplace=True)
     df.rename(columns={'Unnamed: 0': 'census_tract_number'}, inplace=True)
     return df
+
+@st.cache(persist=True, suppress_st_warning=True)
+def get_geodata(shp):
+    gdf = gpd.read_file(shp).to_crs({'init':'epsg:4326'})
+    gdf['TRACTCE'] = gdf['TRACTCE'].astype(float)/100
+    gdf.rename(columns={'TRACTCE': 'census_tract'}, inplace=True)
+    gdf['census_tract'] = gdf['census_tract'].astype(float)
+    return gdf
+
+def get_tract(zipcode):
+    zipcode = int(zipcode)
+    return zip2tract()[zipcode]
+
+def select_model(algo, itvn):
+    return model_dict[algo][itvn]
+
+#@st.cache(persist=True, suppress_st_warning=True)
+def load_model(algo, itvn):
+    model_path = select_model(algo, itvn)
+    return pickle.load(open(model_path, 'rb'))
 
 def predict(tracts, algo, itvn):
     df = load_data(itvn)
@@ -108,18 +121,12 @@ def predict(tracts, algo, itvn):
     tracts = np.asarray(tracts)
     results_merged = pd.DataFrame({'tracts': tracts, 'results': results})
     results_merged.rename(
-        columns={'tracts':'census_tract_number', 'results':'Refinance_score'},
+        columns={
+            'tracts':'census_tract_number',
+            'results':'Refinance_score'},
         inplace=True
     )
     return results_merged
-
-@st.cache(persist=True, suppress_st_warning=True)
-def get_geodata(shp):
-    gdf = gpd.read_file(shp).to_crs({'init':'epsg:4326'})
-    gdf['TRACTCE'] = gdf['TRACTCE'].astype(float)/100
-    gdf.rename(columns={'TRACTCE': 'census_tract'}, inplace=True)
-    gdf['census_tract'] = gdf['census_tract'].astype(float)
-    return gdf
 
 def map_plot(geo_data, data):
     plot = folium.Map([47.6062, -122.3321],zoom_start=9)
@@ -148,7 +155,6 @@ def main():
     map = map_plot(geodata, data)
 
     return st.markdown(map._repr_html_(), unsafe_allow_html=True)
-    #return None
 
 main()
 
