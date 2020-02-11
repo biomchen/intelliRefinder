@@ -49,6 +49,7 @@ zipcode = st.sidebar.selectbox('Please select zip code', zipcodes)
 algo = st.sidebar.selectbox('Select algorithm', algorithms)
 itvn = st.sidebar.selectbox('Intervention',interventions)
 
+# finding the census tract that associated with zipcode
 @st.cache(persist=True, suppress_st_warning=True)
 def zip2tract(state_code=53):
     z2t = {}
@@ -70,6 +71,7 @@ def zip2tract(state_code=53):
         z2t.update({row[0]: ts['tract']})
     return z2t
 
+# loading the merged data of hmda and acs
 @st.cache(persist=True, suppress_st_warning=True)
 def load_data(itvn):
     df = pd.read_csv(DATA_hmda_acs)
@@ -85,6 +87,7 @@ def load_data(itvn):
     df.rename(columns={'Unnamed: 0': 'census_tract_number'}, inplace=True)
     return df
 
+# reading shapefile and convert it based on census tracts
 @st.cache(persist=True, suppress_st_warning=True)
 def get_geodata(shp):
     gdf = gpd.read_file(shp).to_crs({'init':'epsg:4326'})
@@ -100,7 +103,6 @@ def get_tract(zipcode):
 def select_model(algo, itvn):
     return model_dict[algo][itvn]
 
-#@st.cache(persist=True, suppress_st_warning=True)
 def load_model(algo, itvn):
     model_path = select_model(algo, itvn)
     return pickle.load(open(model_path, 'rb'))
