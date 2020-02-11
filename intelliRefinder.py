@@ -20,19 +20,19 @@ MODEL_lr_hf = 'lr_model_hf.sav'
 MODEL_rf_nh = 'rf_model_nh.sav'
 MODEL_rf_hf = 'rf_model_hf.sav'
 
-model_dict = {'Logistic Regression': {'Non-human': MODEL_lr_nh,
-                                      'Human-first': MODEL_lr_hf},
-              'Random Forest': {'Non-human': MODEL_rf_nh,
-                                'Human-first': MODEL_rf_hf}
-            }
+model_dict = {
+    'Logistic Regression': {'Non-human': MODEL_lr_nh, 'Human-first': MODEL_lr_hf},
+    'Random Forest': {'Non-human': MODEL_rf_nh, 'Human-first': MODEL_rf_hf}
+}
 
 transformer = FunctionTransformer(np.log1p, validate=True)
 scaler = MinMaxScaler(feature_range=(0.2, 0.8))
 
 st.title('intelliRefinder')
-st.markdown('''Finding refinance opportunities for mortgage lenders using
-               machine learning algorithms.
-            ''')
+st.markdown(
+    '''Finding refinance opportunities for mortgage lenders using
+       machine learning algorithms.
+    ''')
 
 zipcodes = pd.read_csv(DATA_zipcodes)['zip']
 algorithms = ('Logistic Regression', 'Random Forest')
@@ -71,7 +71,7 @@ def get_tract(zipcode):
 def select_model(algo, itvn):
     return model_dict[algo][itvn]
 
-@st.cache(persist=True, suppress_st_warning=True)
+#@st.cache(persist=True, suppress_st_warning=True)
 def load_model(algo, itvn):
     model_path = select_model(algo, itvn)
     return pickle.load(open(model_path, 'rb'))
@@ -81,8 +81,11 @@ def load_data(itvn):
     df = pd.read_csv(DATA_hmda_acs)
     ethical_related = df.columns[41:80]
     if itvn == 'Non-human':
-        df.drop(['loan_purpose_1', 'loan_purpose_2', 'loan_purpose_3'],
-                axis=1,inplace=True)
+        df.drop(
+            ['loan_purpose_1', 'loan_purpose_2', 'loan_purpose_3'],
+            axis=1,
+            inplace=True
+        )
     elif itvn == 'Human-first':
         df.drop(ethical_related, axis=1, inplace=True)
     df.rename(columns={'Unnamed: 0': 'census_tract_number'}, inplace=True)
@@ -103,8 +106,10 @@ def predict(tracts, algo, itvn):
     results = [i for i in chain(*results)]
     tracts = np.asarray(tracts)
     results_merged = pd.DataFrame({'tracts': tracts, 'results': results})
-    results_merged.rename(columns={'tracts':'census_tract_number',
-                                   'results':'Refinance_score'}, inplace=True)
+    results_merged.rename(
+        columns={'tracts':'census_tract_number', 'results':'Refinance_score'},
+        inplace=True
+    )
     return results_merged
 
 @st.cache(persist=True, suppress_st_warning=True)
@@ -116,22 +121,21 @@ def get_geodata(shp):
     return gdf
 
 def map_plot(geo_data, data):
-    lat = geo_data['INTPTLAT'].astype(float).mean()
-    lon = geo_data['INTPTLON'].astype(float).mean()
-    plot = folium.Map([lat, lon],
-                      zoom_start=11)
-    plot.choropleth(geo_data=geo_data,
-                    name='choropleth',
-                    data=data,
-                    columns=['census_tract_number', 'Refinance_score'],
-                    key_on='feature.properties.census_tract',
-                    fill_color='YlGnBu',
-                    legend_name='Mortgage refinance score',
-                    na_fill_color='white',
-                    na_fill_opacity=0.2,
-                    fill_opacity=0.7,
-                    line_weight=0.6,
-                    line_opacity=0.2)
+    plot = folium.Map([47.6062, -122.3321],zoom_start=9)
+    plot.choropleth(
+        geo_data=geo_data,
+        name='choropleth',
+        data=data,
+        columns=['census_tract_number', 'Refinance_score'],
+        key_on='feature.properties.census_tract',
+        fill_color='YlGnBu',
+        legend_name='Mortgage refinance score',
+        na_fill_color='white',
+        na_fill_opacity=0.2,
+        fill_opacity=0.7,
+        line_weight=0.6,
+        line_opacity=0.2
+    )
     return plot
 
 def main():
@@ -140,7 +144,7 @@ def main():
     gdf = get_geodata(DATA_shp)
     geodata = gdf.loc[gdf['census_tract'].isin(tracts.values)]
     data = scores.loc[scores['census_tract_number'].isin(tracts.values)]
-    map = map_plot(geodata , data)
+    map = map_plot(geodata, data)
 
     return st.markdown(map._repr_html_(), unsafe_allow_html=True)
     #return None
