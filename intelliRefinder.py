@@ -1,4 +1,5 @@
-#
+#!/usr/bin/env python
+
 import streamlit as st
 import pandas as pd
 import geopandas as gpd
@@ -151,6 +152,7 @@ def main():
 
 main()
 
-st.markdown('''If you have questions about or are interested in the project,
-               please feel free to contact me @meng.chen03(at)gmail.com.
-            ''')
+st.markdown(
+    '''If you have questions about or are interested in the project,
+       please feel free to contact me @meng.chen03(at)gmail.com.'''
+)
