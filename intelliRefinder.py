@@ -131,7 +131,7 @@ def predict(tracts, algo, itvn):
     return results_merged
 
 def map_plot(geo_data, data):
-    plot = folium.Map([47.6062, -122.3321],zoom_start=9)
+    plot = folium.Map([47.6062, -122.3321], zoom_start=9)
     plot.choropleth(
         geo_data=geo_data,
         name='choropleth',
