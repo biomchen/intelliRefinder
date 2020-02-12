@@ -131,8 +131,8 @@ def predict(tracts, algo, itvn):
     return results_merged
 
 def map_plot(geo_data, data):
-    plot = folium.Map([47.6062, -122.3321], zoom_start=9)
-    plot.choropleth(
+    map = folium.Map([47.6062, -122.3321], zoom_start=9)
+    folium.Choropleth(
         geo_data=geo_data,
         name='choropleth',
         data=data,
@@ -145,8 +145,11 @@ def map_plot(geo_data, data):
         fill_opacity=0.7,
         line_weight=0.6,
         line_opacity=0.2
-    )
-    return plot
+    ).add_to(map)
+
+    folium.LayerControl().add_to(map)
+
+    return map
 
 def main():
     tracts = get_tract(zipcode)
