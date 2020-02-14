@@ -71,6 +71,19 @@ def zip2tract(state_code=53):
         z2t.update({row[0]: ts['tract']})
     return z2t
 
+# reading shapefile and convert it based on census tracts
+@st.cache(persist=True, suppress_st_warning=True)
+def get_geodata(shp):
+    gdf = gpd.read_file(shp).to_crs({'init':'epsg:4326'})
+    gdf['TRACTCE'] = gdf['TRACTCE'].astype(float)/100
+    gdf.rename(columns={'TRACTCE': 'census_tract'}, inplace=True)
+    gdf['census_tract'] = gdf['census_tract'].astype(float)
+    return gdf
+
+def get_tract(zipcode):
+    zipcode = int(zipcode)
+    return zip2tract()[zipcode]
+
 # loading the merged data of hmda and acs
 @st.cache(persist=True, suppress_st_warning=True)
 def load_data(itvn):
@@ -86,19 +99,6 @@ def load_data(itvn):
         df.drop(ethical_related, axis=1, inplace=True)
     df.rename(columns={'Unnamed: 0': 'census_tract_number'}, inplace=True)
     return df
-
-# reading shapefile and convert it based on census tracts
-@st.cache(persist=True, suppress_st_warning=True)
-def get_geodata(shp):
-    gdf = gpd.read_file(shp).to_crs({'init':'epsg:4326'})
-    gdf['TRACTCE'] = gdf['TRACTCE'].astype(float)/100
-    gdf.rename(columns={'TRACTCE': 'census_tract'}, inplace=True)
-    gdf['census_tract'] = gdf['census_tract'].astype(float)
-    return gdf
-
-def get_tract(zipcode):
-    zipcode = int(zipcode)
-    return zip2tract()[zipcode]
 
 def select_model(algo, itvn):
     return model_dict[algo][itvn]
@@ -118,7 +118,7 @@ def predict(tracts, algo, itvn):
     model = load_model(algo, itvn)
     results = model.predict(x)
     results = results + scores
-    results = scaler.fit_transform(np.asarray(results).reshape(-1,1))
+    results = scaler.fit_transform(np.asarray(results).reshape(-1, 1))
     results = [i for i in chain(*results)]
     tracts = np.asarray(tracts)
     results_merged = pd.DataFrame({'tracts': tracts, 'results': results})
@@ -131,10 +131,19 @@ def predict(tracts, algo, itvn):
     return results_merged
 
 def map_plot(geo_data, data):
-    map = folium.Map([47.6062, -122.3321], zoom_start=9)
+    lats = geo_data['INTPTLAT'].astype(float)
+    lons = geo_data['INTPTLON'].astype(float)
+    lat = lats.mean()
+    lon = lons.mean()
+    map = folium.Map(
+        location=[lat, lon],
+        zoom_start=11,
+        control_scale=True,
+        prefer_canvas=True,
+        disable_3d=True)
     folium.Choropleth(
         geo_data=geo_data,
-        name='choropleth',
+        name='Census tracts',
         data=data,
         columns=['census_tract_number', 'Refinance_score'],
         key_on='feature.properties.census_tract',
@@ -146,6 +155,15 @@ def map_plot(geo_data, data):
         line_weight=0.6,
         line_opacity=0.2
     ).add_to(map)
+    # add the markers
+    for i in range(0, geo_data.shape[0]):
+        lat_pop = lats.iloc[i]
+        lon_pop = lons.iloc[i]
+        score = round(data['Refinance_score'].iloc[i], 2)
+        folium.Marker(
+            [lat_pop, lon_pop],
+            popup='Score: {}'.format(score)
+        ).add_to(map)
 
     folium.LayerControl().add_to(map)
 
@@ -155,8 +173,11 @@ def main():
     tracts = get_tract(zipcode)
     scores = predict(tracts, algo, itvn)
     gdf = get_geodata(DATA_shp)
-    geodata = gdf.loc[gdf['census_tract'].isin(tracts.values)]
-    data = scores.loc[scores['census_tract_number'].isin(tracts.values)]
+    gdf_tract_set = set(gdf['census_tract'])
+    scores_tract_set = set(scores['census_tract_number'])
+    tract_set = gdf_tract_set.intersection(scores_tract_set, set(tracts.values))
+    geodata = gdf.loc[gdf['census_tract'].isin(tract_set)]
+    data = scores.loc[scores['census_tract_number'].isin(tract_set)]
     map = map_plot(geodata, data)
 
     return st.markdown(map._repr_html_(), unsafe_allow_html=True)
