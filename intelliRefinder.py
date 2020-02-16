@@ -51,13 +51,13 @@ itvn = st.sidebar.selectbox('Intervention',interventions)
 
 # finding the census tract that associated with zipcode
 @st.cache(persist=True, suppress_st_warning=True)
-def zip2tract(state_code=53):
+def zip2tract(state_code=530330):
     z2t = {}
     zt = []
     df = pd.read_excel(DATA_zip_tract)
     df.columnns = ['zip', 'tract']
     for z, t in zip(df['zip'], df['tract']):
-        if str(t)[:2] == str(state_code):
+        if str(t)[:6] == str(state_code):
             zt.append([z, str(t)[-5:].lstrip('0')])
         else:
             continue
@@ -78,14 +78,12 @@ def get_geodata(shp):
     gdf['TRACTCE'] = gdf['TRACTCE'].astype(float)/100
     gdf.rename(columns={'TRACTCE': 'census_tract'}, inplace=True)
     gdf['census_tract'] = gdf['census_tract'].astype(float)
+    gdf = gdf[gdf['COUNTYFP'] == '033']
     return gdf
 
 def get_tract(zipcode):
     zipcode = int(zipcode)
-    results = zip2tract()[zipcode]
-    print(zipcode)
-    print(results)
-    return results
+    return zip2tract()[zipcode]
 
 # loading the merged data of hmda and acs
 @st.cache(persist=True, suppress_st_warning=True)
@@ -159,14 +157,16 @@ def map_plot(geo_data, data):
         line_opacity=0.2
     ).add_to(map)
     # add the markers
-    #for i in range(0, geo_data.shape[0]):
-    #    lat_pop = lats.iloc[i]
-    #    lon_pop = lons.iloc[i]
-    #    score = round(data['Refinance_score'].iloc[i], 2)
-    #    folium.Marker(
-    #        [lat_pop, lon_pop],
-    #        popup='Score: {}'.format(score)
-    #    ).add_to(map)
+    for i in range(0, geo_data.shape[0]):
+        lat_pop = lats.iloc[i]
+        lon_pop = lons.iloc[i]
+        tract = geo_data['census_tract'].iloc[i]
+        score = data[data['census_tract_number'] == tract]['Refinance_score']
+        folium.Marker(
+            [lat_pop, lon_pop],
+            popup='Census tract: {}\ Score: {}'.format(
+                tract, round(float(score.values), 2))
+        ).add_to(map)
 
     folium.LayerControl().add_to(map)
 
