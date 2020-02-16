@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 import geopandas as gpd
 import folium
+from folium import plugins
 import pickle
 import numpy as np
 from itertools import chain
@@ -142,6 +143,10 @@ def map_plot(geo_data, data):
         control_scale=True,
         prefer_canvas=True,
         disable_3d=True)
+
+    score_layer = folium.FeatureGroup(name='Score')
+    map.add_child(score_layer)
+
     folium.Choropleth(
         geo_data=geo_data,
         name='Census tracts',
@@ -157,6 +162,7 @@ def map_plot(geo_data, data):
         line_opacity=0.2
     ).add_to(map)
     # add the markers
+
     for i in range(0, geo_data.shape[0]):
         lat_pop = lats.iloc[i]
         lon_pop = lons.iloc[i]
@@ -164,9 +170,8 @@ def map_plot(geo_data, data):
         score = data[data['census_tract_number'] == tract]['Refinance_score']
         folium.Marker(
             [lat_pop, lon_pop],
-            popup='Census tract: {}\ Score: {}'.format(
-                tract, round(float(score.values), 2))
-        ).add_to(map)
+            popup='Score: {}'.format(round(float(score.values), 2))
+        ).add_to(score_layer)
 
     folium.LayerControl().add_to(map)
 
