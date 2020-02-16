@@ -175,7 +175,10 @@ def main():
     gdf = get_geodata(DATA_shp)
     gdf_tract_set = set(gdf['census_tract'])
     scores_tract_set = set(scores['census_tract_number'])
-    tract_set = gdf_tract_set.intersection(scores_tract_set, set(tracts.values))
+    tract_set = gdf_tract_set.intersection(
+        scores_tract_set,
+        set(tracts.values)
+        )
     geodata = gdf.loc[gdf['census_tract'].isin(tract_set)]
     data = scores.loc[scores['census_tract_number'].isin(tract_set)]
     map = map_plot(geodata, data)
