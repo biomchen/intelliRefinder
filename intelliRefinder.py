@@ -144,7 +144,7 @@ def map_plot(geo_data, data):
         prefer_canvas=True,
         disable_3d=True)
 
-    score_layer = folium.FeatureGroup(name='Score')
+    score_layer = folium.FeatureGroup(name='Opportunity score')
     map.add_child(score_layer)
 
     folium.Choropleth(
@@ -154,7 +154,7 @@ def map_plot(geo_data, data):
         columns=['census_tract_number', 'Refinance_score'],
         key_on='feature.properties.census_tract',
         fill_color='YlGnBu',
-        legend_name='Mortgage refinance score',
+        legend_name='Mortgage refinance business opportunity',
         na_fill_color='white',
         na_fill_opacity=0.2,
         fill_opacity=0.7,
