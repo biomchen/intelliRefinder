@@ -156,14 +156,14 @@ def map_plot(geo_data, data):
         line_opacity=0.2
     ).add_to(map)
     # add the markers
-    #for i in range(0, geo_data.shape[0]):
-    #    lat_pop = lats.iloc[i]
-    #    lon_pop = lons.iloc[i]
-    #    score = round(data['Refinance_score'].iloc[i], 2)
-    #    folium.Marker(
-    #        [lat_pop, lon_pop],
-    #        popup='Score: {}'.format(score)
-    #    ).add_to(map)
+    for i in range(0, geo_data.shape[0]):
+        lat_pop = lats.iloc[i]
+        lon_pop = lons.iloc[i]
+        score = round(data['Refinance_score'].iloc[i], 2)
+        folium.Marker(
+            [lat_pop, lon_pop],
+            popup='Score: {}'.format(score)
+        ).add_to(map)
 
     folium.LayerControl().add_to(map)
 
