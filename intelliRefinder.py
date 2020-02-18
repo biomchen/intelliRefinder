@@ -35,8 +35,8 @@ scaler = MinMaxScaler(feature_range=(0.2, 0.8))
 # set the title of web app
 st.title('intelliRefinder')
 st.markdown(
-    '''Finding refinance opportunities for mortgage lenders using
-       machine learning algorithms.
+    '''Predict optimal locations for mortgage refinance business opportunities
+       using machine learning algorithms on US OpenStreetMap (OSM) data.
     ''')
 
 # load zip codes of king county WA
