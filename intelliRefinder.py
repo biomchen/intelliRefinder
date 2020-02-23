@@ -19,13 +19,9 @@ DATA_shp = 'data/2019/tl_2019_53_tract.shp'
 DATA_zipcodes = 'data/zipcodes_king.csv'
 MODEL_lr_nh = 'data/lr_model_nh.sav'
 MODEL_lr_hf = 'data/lr_model_hf.sav'
-#MODEL_rf_nh = 'data/rf_model_nh.sav'
-#MODEL_rf_hf = 'data/rf_model_hf.sav'
 
 # dictionary of models
 model_dict = { 'Non-human': MODEL_lr_nh, 'Human-first': MODEL_lr_hf}
-    #'Random Forest': {'Non-human': MODEL_rf_nh, 'Human-first': MODEL_rf_hf}
-
 
 # transform the feature vectors
 transformer = FunctionTransformer(np.log1p, validate=True)
