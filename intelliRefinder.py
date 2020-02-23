@@ -19,14 +19,13 @@ DATA_shp = 'data/2019/tl_2019_53_tract.shp'
 DATA_zipcodes = 'data/zipcodes_king.csv'
 MODEL_lr_nh = 'data/lr_model_nh.sav'
 MODEL_lr_hf = 'data/lr_model_hf.sav'
-MODEL_rf_nh = 'data/rf_model_nh.sav'
-MODEL_rf_hf = 'data/rf_model_hf.sav'
+#MODEL_rf_nh = 'data/rf_model_nh.sav'
+#MODEL_rf_hf = 'data/rf_model_hf.sav'
 
 # dictionary of models
-model_dict = {
-    'Logistic Regression': {'Non-human': MODEL_lr_nh, 'Human-first': MODEL_lr_hf},
-    'Random Forest': {'Non-human': MODEL_rf_nh, 'Human-first': MODEL_rf_hf}
-}
+model_dict = { 'Non-human': MODEL_lr_nh, 'Human-first': MODEL_lr_hf}
+    #'Random Forest': {'Non-human': MODEL_rf_nh, 'Human-first': MODEL_rf_hf}
+
 
 # transform the feature vectors
 transformer = FunctionTransformer(np.log1p, validate=True)
@@ -41,13 +40,13 @@ st.markdown(
 
 # load zip codes of king county WA
 zipcodes = pd.read_csv(DATA_zipcodes)['zip']
-algorithms = ('Logistic Regression', 'Random Forest')
+#algorithms = ('Logistic Regression', 'Random Forest')
 interventions = ('Non-human', 'Human-first')
 
 # seting up the sidebar and loading the data
 st.sidebar.markdown('Data availability: King County, WA')
 zipcode = st.sidebar.selectbox('Please select zip code', zipcodes)
-algo = st.sidebar.selectbox('Select algorithm', algorithms)
+#algo = st.sidebar.selectbox('Select algorithm', algorithms)
 itvn = st.sidebar.selectbox('Intervention',interventions)
 
 # finding the census tract that associated with zipcode
@@ -102,14 +101,14 @@ def load_data(itvn):
     df.rename(columns={'Unnamed: 0': 'census_tract_number'}, inplace=True)
     return df
 
-def select_model(algo, itvn):
-    return model_dict[algo][itvn]
+def select_model(itvn):
+    return model_dict[itvn]
 
-def load_model(algo, itvn):
-    model_path = select_model(algo, itvn)
+def load_model(itvn):
+    model_path = select_model(itvn)
     return pickle.load(open(model_path, 'rb'))
 
-def predict(tracts, algo, itvn):
+def predict(tracts, itvn):
     df = load_data(itvn)
     df_x = df.iloc[:, :-2]
     idxs = df_x['census_tract_number'].isin(tracts.values)
@@ -117,7 +116,7 @@ def predict(tracts, algo, itvn):
     df_x = df_x[idxs].iloc[:, 1:]
     scores = df[idxs].iloc[:, -2]
     x = transformer.transform(df_x)
-    model = load_model(algo, itvn)
+    model = load_model(itvn)
     results = model.predict(x)
     results = results + scores
     results = scaler.fit_transform(np.asarray(results).reshape(-1, 1))
@@ -179,7 +178,7 @@ def map_plot(geo_data, data):
 
 def main():
     tracts = get_tract(zipcode)
-    scores = predict(tracts, algo, itvn)
+    scores = predict(tracts, itvn)
     gdf = get_geodata(DATA_shp)
     gdf_tract_set = set(gdf['census_tract'])
     scores_tract_set = set(scores['census_tract_number'])
