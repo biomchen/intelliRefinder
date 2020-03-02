@@ -62,11 +62,13 @@ class ProjectModels(object):
         model.fit(self.x, self.y)
         return model
 
+    # lasso regression
     def lasso(self, alpha=1, max_iter=1000):
         model = Lasso(alpha=alpha, max_iter=max_iter)
         model.fit(self.x, self.y)
         return model
 
+    # random forest
     def rft(self, n_estimators=500, mx_leaf_nodes=16, n_jobs=-1):
         model = RandomForestClassifier(n_estimators=n_estimators,
                                        max_leaf_nodes=mx_leaf_nodes,
@@ -74,6 +76,7 @@ class ProjectModels(object):
         model.fit(self.x, self.y)
         return model
 
+    # cross validate for regression models
     def cross_validate_results(self, cv=5):
         # using precision, recall and f1 scores as validated matrices
         # with 5 folds of the data
@@ -90,11 +93,13 @@ class ProjectModels(object):
             scores[key] = round(np.mean(scores[key]), 3)
         return scores
 
+    # predict the results
     def predict_results(self):
         model = self.get_model()
         results = model.predict(self.x)
         return results
 
+    # visualize the coeffients or importance of features
     def visualize_coefs(self, num):
         model = self.get_model()
         if self.model == 'rft':
@@ -114,6 +119,7 @@ class ProjectModels(object):
                     data=coef_df.iloc[:num],
                     color='b')
 
+    # pca evaluation
     def PCA_eval(self, n):
         pca = PCA(n_components=n)
         x = pca.fit_transform(self.x)
@@ -135,6 +141,7 @@ class ProjectModels(object):
                     continue
         return feat_names
 
+    # pca cross validation
     def PCA_cross_validate(self, n, cv=5):
         scoring = ['precision', 'recall', 'f1']
         pca = PCA(n_components=n)
