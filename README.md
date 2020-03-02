@@ -19,7 +19,8 @@ The mortgage refinance is another healthy business, besides the home purchase lo
   * Scikit-Learn
   * GeoPandas
   * Streamlit
-* GIS
+  * Folium
+* OpenStreetMap(OSM)
 * Logistic Regression
 * Feature Engineering
 * SQL
