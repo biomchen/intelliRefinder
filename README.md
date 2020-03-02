@@ -1,5 +1,4 @@
 ## intelliRefinder
-<img src="example.png" width="600" height="416">
-
-
-intelliRefinder is an interactive online tool to help mortgage lenders to recognize refinance opportunities using machine learning algorithms.
+Predicting optimal locations for mortgage refinance business opportunities using machine learning algorithm on US OpenStreetMap(OSM) data.
+Example: zip code 98103 related area, King County, WA
+<img src="example.png" width="600" height="300">
