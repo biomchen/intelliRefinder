@@ -1,11 +1,14 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 import time
 import sqlite3
 from pathlib import Path
 import geopandas as gpd
 import folium
 from sklearn.linear_model import LogisticRegression, Ridge, Lasso
+from sklearn.model_selection import cross_validate
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import PCA
 from itertools import chain
@@ -153,7 +156,7 @@ class ProjectModels(object):
         model = self.get_model()
         scores = cross_validate(
             model,
-            self.x, self.y,
+            x, self.y,
             cv=cv,
             scoring=scoring,
             return_train_score=False)
