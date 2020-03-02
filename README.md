@@ -26,7 +26,7 @@ The mortgage refinance is another healthy business, besides the home purchase lo
 * AWS EC2, S3
 
 ## Actionable Insight
-The trained logistic model classified mortgage refinance opportunities in King County, WA and was then used to create an interactive maps to help mortgage lenders to actively identify potential mortgage refinance business in the area of interest and to decide how optimize their resource allocations for marketing. Please visit [intelliRefinder](http://bit.ly/IntelliRefinderDemo) to explore the mortgage refinance opportunities of King County, WA.
+The trained logistic model classified mortgage refinance opportunities in King County, WA and was then used to create an interactive maps to help mortgage lenders to actively identify locations for potential mortgage refinance business in the area of interest and to decide how to optimize their resource allocations for marketing. Please visit [intelliRefinder](http://bit.ly/IntelliRefinderDemo) to explore the mortgage refinance opportunities of King County, WA.
 
 Important features for classifying the mortgage refinance opportunity:
 * Loan status
@@ -36,5 +36,4 @@ Important features for classifying the mortgage refinance opportunity:
 * Minor (age<18) population
 * Work travel time
 
-### Contact
-meng.chen03(at)gmail.com
+If you have any questions, please contact me at meng.chen03(at)gmail.com.
