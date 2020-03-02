@@ -110,13 +110,13 @@ def predict(tracts, itvn):
     idxs = df_x['census_tract_number'].isin(tracts.values)
     tracts = df_x[idxs].iloc[:, 0]
     df_x = df_x[idxs].iloc[:, 1:]
-    scores = df[idxs].iloc[:, -2]
+    #scores = df[idxs].iloc[:, -2]
     x = transformer.transform(df_x)
     model = load_model(itvn)
-    results = model.predict(x)
-    results = results + scores
-    results = scaler.fit_transform(np.asarray(results).reshape(-1, 1))
-    results = [i for i in chain(*results)]
+    results = [max(i, j) for i, j in model.predict_proba(x)]
+    #results = results + scores
+    #results = scaler.fit_transform(np.asarray(results).reshape(-1, 1))
+    #results = [i for i in chain(*results)]
     tracts = np.asarray(tracts)
     results_merged = pd.DataFrame({'tracts': tracts, 'results': results})
     results_merged.rename(
@@ -138,10 +138,10 @@ def map_plot(geo_data, data):
         control_scale=True,
         prefer_canvas=True,
         disable_3d=True)
-
+    # add score layer
     score_layer = folium.FeatureGroup(name='Opportunity score')
     map.add_child(score_layer)
-
+    # add choropleth layer
     folium.Choropleth(
         geo_data=geo_data,
         name='Census tracts',
@@ -157,7 +157,6 @@ def map_plot(geo_data, data):
         line_opacity=0.2
     ).add_to(map)
     # add the markers
-
     for i in range(0, geo_data.shape[0]):
         lat_pop = lats.iloc[i]
         lon_pop = lons.iloc[i]
@@ -167,9 +166,8 @@ def map_plot(geo_data, data):
             [lat_pop, lon_pop],
             popup='Score: {}'.format(round(float(score.values), 2))
         ).add_to(score_layer)
-
+    # add layer control functions
     folium.LayerControl().add_to(map)
-
     return map
 
 def main():
@@ -185,7 +183,6 @@ def main():
     geodata = gdf.loc[gdf['census_tract'].isin(tract_set)]
     data = scores.loc[scores['census_tract_number'].isin(tract_set)]
     map = map_plot(geodata, data)
-
     return st.markdown(map._repr_html_(), unsafe_allow_html=True)
 
 main()
