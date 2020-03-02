@@ -5,7 +5,151 @@ import sqlite3
 from pathlib import Path
 import geopandas as gpd
 import folium
+from sklearn.linear_model import LogisticRegression, Ridge, Lasso
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.decomposition import PCA
+from itertools import chain
 from geopy.geocoders import Nominatim
+
+
+class ProjectModels(object):
+    '''
+    Attributes:
+    x: features vectors
+    y: target
+
+    Functions:
+    lgr: logitic regression with l1 regularization
+    rgr: ridge regression
+    lasso: lasso regression
+    rft: random forest
+    svm: support vector machine
+    cross_validate_results: results of 5-fold cross validation
+    visualize_coefs: visualize the coefficients or importance of top features
+    PCA_val: evaluate the PCs and apply the PCs to different classifiers
+    '''
+    def __init__(self, x, y, model):
+        self.x = x
+        self.y = y
+        self.model = model
+        self.get_model()
+        self.lgr()
+        self.rgr()
+        self.lasso()
+        self.rft()
+        self.cross_validate_results()
+        self.predict_results()
+
+    def get_model(self):
+        models = {'lgr': self.lgr(),
+                  'rgr': self.rgr(),
+                  'lasso': self.lasso(),
+                  'rft': self.rft()}
+        return models[self.model]
+
+    # logistic regressino with l1 regularization
+    def lgr(self, max_iter=10000, penalty='l1', solver='saga'):
+        model = LogisticRegression(random_state=50,
+                                   max_iter=max_iter,
+                                   penalty=penalty,
+                                   solver=solver)
+        model.fit(self.x, self.y)
+        return model
+
+    # ridged regression for l2 regularization
+    def rgr(self, alpha=1, solver='auto'):
+        model = Ridge(alpha=alpha, solver=solver)
+        model.fit(self.x, self.y)
+        return model
+
+    def lasso(self, alpha=1, max_iter=1000):
+        model = Lasso(alpha=alpha, max_iter=max_iter)
+        model.fit(self.x, self.y)
+        return model
+
+    def rft(self, n_estimators=500, mx_leaf_nodes=16, n_jobs=-1):
+        model = RandomForestClassifier(n_estimators=n_estimators,
+                                       max_leaf_nodes=mx_leaf_nodes,
+                                       n_jobs=n_jobs)
+        model.fit(self.x, self.y)
+        return model
+
+    def cross_validate_results(self, cv=5):
+        # using precision, recall and f1 scores as validated matrices
+        # with 5 folds of the data
+        scoring = ['precision', 'recall', 'f1']
+        model = self.get_model()
+        scores = cross_validate(model,
+                                self.x, self.y,
+                                cv=cv,
+                                scoring=scoring,
+                                return_train_score=False)
+        # calculate the mean values of each matrices
+        # return it to the value of the keys (matrices)
+        for key in scores.keys():
+            scores[key] = round(np.mean(scores[key]), 3)
+        return scores
+
+    def predict_results(self):
+        model = self.get_model()
+        results = model.predict(self.x)
+        return results
+
+    def visualize_coefs(self, num):
+        model = self.get_model()
+        if self.model == 'rft':
+            coefs = model.feature_importances_
+        else:
+            coefs = model.coef_
+            coefs = [coef for coef in chain(*coefs)]
+        coef_df = pd.DataFrame([self.x.columns, coefs]).T
+        coef_df.columns=['feature', 'coefs']
+        coef_df['abs'] = abs(coef_df.coefs)
+        coef_df.sort_values(by='abs', ascending=False, inplace=True)
+        # set up the fig settings
+        fig, ax = plt.subplots(figsize=(6, num*0.3))
+        # set up the seaborn settings
+        sns.set(style='whitegrid')
+        sns.barplot(y='feature', x='abs',
+                    data=coef_df.iloc[:num],
+                    color='b')
+
+    def PCA_eval(self, n):
+        pca = PCA(n_components=n)
+        x = pca.fit_transform(self.x)
+        print(pca.explained_variance_ratio_)
+        sns.scatterplot(x[:, 0], x[:, 1], hue=self.y)
+        plt.show()
+        # PC analysis
+        c = pca.components_
+        df = pd.DataFrame(pca.components_,
+                          columns=self.x.columns,
+                          index=['PC1','PC2','PC3']).T
+        feat_names = []
+        for i in range(n):
+            pc = df.iloc[:, i]
+            for col, val in zip(pc.index, abs(pc.values)):
+                if val >= 0.2:
+                    feat_names.append(col)
+                else:
+                    continue
+        return feat_names
+
+    def PCA_cross_validate(self, n, cv=5):
+        scoring = ['precision', 'recall', 'f1']
+        pca = PCA(n_components=n)
+        x = pca.fit_transform(self.x)
+        model = self.get_model()
+        scores = cross_validate(model,
+                                x, self.y,
+                                cv=cv,
+                                scoring=scoring,
+                                return_train_score=False)
+        # calculate the mean values of each matrices
+        # return it to the value of the keys (matrices)
+        for key in scores.keys():
+            scores[key] = round(np.mean(scores[key]), 3)
+        return scores
 
 def connect_sql(db):
     '''connect to the SQL database'''
