@@ -36,4 +36,4 @@ Important features for classifying the mortgage refinance opportunity:
 * Minor (age<18) population
 * Work travel time
 
-If you have any questions, please contact me at meng.chen03(at)gmail.com.
+If you have any questions, please contact me at **meng.chen03(at)gmail.com**.
