@@ -49,10 +49,11 @@ class ProjectModels(object):
 
     # logistic regressino with l1 regularization
     def lgr(self, max_iter=10000, penalty='l1', solver='saga'):
-        model = LogisticRegression(random_state=50,
-                                   max_iter=max_iter,
-                                   penalty=penalty,
-                                   solver=solver)
+        model = LogisticRegression(
+            random_state=50,
+            max_iter=max_iter,
+            penalty=penalty,
+            solver=solver)
         model.fit(self.x, self.y)
         return model
 
@@ -70,9 +71,10 @@ class ProjectModels(object):
 
     # random forest
     def rft(self, n_estimators=500, mx_leaf_nodes=16, n_jobs=-1):
-        model = RandomForestClassifier(n_estimators=n_estimators,
-                                       max_leaf_nodes=mx_leaf_nodes,
-                                       n_jobs=n_jobs)
+        model = RandomForestClassifier(
+            n_estimators=n_estimators,
+            max_leaf_nodes=mx_leaf_nodes,
+            n_jobs=n_jobs)
         model.fit(self.x, self.y)
         return model
 
@@ -82,11 +84,12 @@ class ProjectModels(object):
         # with 5 folds of the data
         scoring = ['precision', 'recall', 'f1']
         model = self.get_model()
-        scores = cross_validate(model,
-                                self.x, self.y,
-                                cv=cv,
-                                scoring=scoring,
-                                return_train_score=False)
+        scores = cross_validate(
+            model,
+            self.x, self.y,
+            cv=cv,
+            scoring=scoring,
+            return_train_score=False)
         # calculate the mean values of each matrices
         # return it to the value of the keys (matrices)
         for key in scores.keys():
@@ -128,9 +131,10 @@ class ProjectModels(object):
         plt.show()
         # PC analysis
         c = pca.components_
-        df = pd.DataFrame(pca.components_,
-                          columns=self.x.columns,
-                          index=['PC1','PC2','PC3']).T
+        df = pd.DataFrame(
+            pca.components_,
+            columns=self.x.columns,
+            index=['PC1','PC2','PC3']).T
         feat_names = []
         for i in range(n):
             pc = df.iloc[:, i]
@@ -147,11 +151,12 @@ class ProjectModels(object):
         pca = PCA(n_components=n)
         x = pca.fit_transform(self.x)
         model = self.get_model()
-        scores = cross_validate(model,
-                                x, self.y,
-                                cv=cv,
-                                scoring=scoring,
-                                return_train_score=False)
+        scores = cross_validate(
+            model,
+            self.x, self.y,
+            cv=cv,
+            scoring=scoring,
+            return_train_score=False)
         # calculate the mean values of each matrices
         # return it to the value of the keys (matrices)
         for key in scores.keys():
@@ -249,11 +254,12 @@ def feature_pivot(df, features, f_type):
         if f_type == 'cat':
             func = lambda x: len(x)
             df1 = df[['as_of_year', 'census_tract_number']+[f]]
-            df2 = pd.pivot_table(df1,
-                                 values='as_of_year',
-                                 index=['census_tract_number'],
-                                 columns=f,
-                                 aggfunc=func, fill_value=0)
+            df2 = pd.pivot_table(
+                df1,
+                values='as_of_year',
+                index=['census_tract_number'],
+                columns=f,
+                aggfunc=func, fill_value=0)
             df2.columns = [f+'_'+str(i) for i in df2.columns]
 
         elif f_type == 'con':
@@ -323,19 +329,21 @@ def get_geodata(shp):
     return gdf
 
 def map_plot(location, geo_data, data):
-    plot = folium.Map(location=location,
-                      zoom_start=9,
-                      width='50%',
-                      length='50%')
-    plot.choropleth(geo_data=geo_data,
-                    name='choropleth',
-                    data=data,
-                    columns=['census_tract_number', 'Refinance_score'],
-                    key_on='feature.properties.census_tract',
-                    fill_color='YlOrRd',
-                    na_fill_color='white',
-                    na_fill_opacity=0.2,
-                    fill_opacity=0.7,
-                    line_weight=0.6,
-                    line_opacity=0.2)
+    plot = folium.Map(
+        location=location,
+        zoom_start=9,
+        width='50%',
+        length='50%')
+    plot.choropleth(
+        geo_data=geo_data,
+        name='choropleth',
+        data=data,
+        columns=['census_tract_number', 'Refinance_score'],
+        key_on='feature.properties.census_tract',
+        fill_color='YlOrRd',
+        na_fill_color='white',
+        na_fill_opacity=0.2,
+        fill_opacity=0.7,
+        line_weight=0.6,
+        line_opacity=0.2)
     return plot
