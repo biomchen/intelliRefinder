@@ -4,9 +4,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import time
 import sqlite3
-from pathlib import Path
 import geopandas as gpd
 import folium
+from pathlib import Path
 from sklearn.linear_model import LogisticRegression, Ridge, Lasso
 from sklearn.model_selection import cross_validate
 from sklearn.ensemble import RandomForestClassifier
