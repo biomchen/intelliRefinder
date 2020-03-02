@@ -1,0 +1,4 @@
+pandas==1.0.0
+geopandas==0.6.2
+folium==0.10.0
+streamlit==0.53.0
