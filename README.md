@@ -9,6 +9,17 @@ According to Zillow Research, mortgage market is about $33.3 trillion dollars in
 \
 The mortgage refinance is another healthy business, besides the home purchase loan, to maintain cash flow for those small and local mortgage lenders. So, identifying the mortgage refinance opportunities would be their priority and the correct business opportunity identification would be critical for their success.
 
+## Actionable Insight
+The trained logistic model classified mortgage refinance opportunities in King County, WA and was then used to create an interactive maps to help mortgage lenders to actively identify locations for potential mortgage refinance business in the area of interest and to decide how to optimize their resource allocations for marketing. Please visit [intelliRefinder](http://bit.ly/IntelliRefinderDemo) to explore the mortgage refinance opportunities of King County, WA.
+
+Important features for classifying the mortgage refinance opportunity:
+* Loan status
+* Marriage status
+* Loaner purchaser
+* Income
+* Minor (age<18) population
+* Work travel time
+
 ## Data
 * 2008-2017 mortgage transaction data, available via Home Mortgage Disclosure Act;
 * Demographic data from 10-year Census American Community Survey data;
@@ -25,16 +36,5 @@ The mortgage refinance is another healthy business, besides the home purchase lo
 * Feature Engineering
 * SQL
 * AWS EC2, S3
-
-## Actionable Insight
-The trained logistic model classified mortgage refinance opportunities in King County, WA and was then used to create an interactive maps to help mortgage lenders to actively identify locations for potential mortgage refinance business in the area of interest and to decide how to optimize their resource allocations for marketing. Please visit [intelliRefinder](http://bit.ly/IntelliRefinderDemo) to explore the mortgage refinance opportunities of King County, WA.
-
-Important features for classifying the mortgage refinance opportunity:
-* Loan status
-* Marriage status
-* Loaner purchaser
-* Income
-* Minor (age<18) population
-* Work travel time
 
 If you have any questions, please contact me at **meng.chen03(at)gmail.com**.
