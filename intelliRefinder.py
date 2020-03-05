@@ -110,13 +110,9 @@ def predict(tracts, itvn):
     idxs = df_x['census_tract_number'].isin(tracts.values)
     tracts = df_x[idxs].iloc[:, 0]
     df_x = df_x[idxs].iloc[:, 1:]
-    #scores = df[idxs].iloc[:, -2]
     x = transformer.transform(df_x)
     model = load_model(itvn)
     results = [max(i, j) for i, j in model.predict_proba(x)]
-    #results = results + scores
-    #results = scaler.fit_transform(np.asarray(results).reshape(-1, 1))
-    #results = [i for i in chain(*results)]
     tracts = np.asarray(tracts)
     results_merged = pd.DataFrame({'tracts': tracts, 'results': results})
     results_merged.rename(
