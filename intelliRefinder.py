@@ -226,6 +226,7 @@ st.markdown(
     unsafe_allow_html=True)
 
 st.markdown(
-    '''If you have any questions or comments, please send email to \
-    meng.chen03(at)gmail.com.'''
+    '''For details of the project, please vist [here]\
+    (https://biomchen.github.io/intelliRefinder.html). If you have any \
+    questions or comments, please send them to meng.chen03(at)gmail.com.'''
 )
