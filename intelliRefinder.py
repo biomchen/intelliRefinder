@@ -55,7 +55,7 @@ st.sidebar.markdown(
     opportunities based on census tracts''')
 st.sidebar.markdown(
     '''* Implement the model to predict opportunies and visualize them in an \
-    interactive maps for mortgage lenders.'''
+    interactive maps for mortgage lenders.''')
 st.sidebar.markdown(
     '''* Mortgage lenders actively locate refinance business opportunities \
     and tailor their resources towards those markets.''')
