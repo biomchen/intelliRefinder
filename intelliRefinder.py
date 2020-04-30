@@ -54,9 +54,11 @@ st.sidebar.markdown(
     '''* Train logistic regression model to classfy mortgage refinance business \
     opportunities based on census tracts''')
 st.sidebar.markdown(
-    '''* Implement the model to predict opportunies and visualized them in an \
-    interactive maps to visualize refinance business opportunities for \
-    mortgage lenders.''')
+    '''* Implement the model to predict opportunies and visualize them in an \
+    interactive maps for mortgage lenders.'''
+st.sidebar.markdown(
+    '''* Mortgage lenders actively locate refinance business opportunities \
+    and tailor their resources towards those markets.''')
 # Data
 st.sidebar.markdown('''**Data**''')
 st.sidebar.markdown(
