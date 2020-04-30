@@ -21,7 +21,9 @@ MODEL_lr_nh = 'data/lr_model_nh.sav'
 MODEL_lr_hf = 'data/lr_model_hf.sav'
 
 # dictionary of models
-model_dict = { 'Non-human': MODEL_lr_nh, 'Human-first': MODEL_lr_hf}
+model_dict = {'Original': MODEL_lr_nh,
+              'Without Population Bias': MODEL_lr_hf
+              }
 
 # transform the feature vectors
 transformer = FunctionTransformer(np.log1p, validate=True)
@@ -37,13 +39,33 @@ st.markdown(
 # load zip codes of king county WA
 zipcodes = pd.read_csv(DATA_zipcodes)['zip']
 #algorithms = ('Logistic Regression', 'Random Forest')
-interventions = ('Non-human', 'Human-first')
+interventions = ('Original', 'Without Population Bias')
 
 # seting up the sidebar and loading the data
-st.sidebar.markdown('Data availability: King County, WA')
-zipcode = st.sidebar.selectbox('Please select zip code', zipcodes)
+st.sidebar.title('''Select your location''')
+st.sidebar.markdown('''King County, WA''')
+zipcode = st.sidebar.selectbox('Select zip code', zipcodes)
 #algo = st.sidebar.selectbox('Select algorithm', algorithms)
-itvn = st.sidebar.selectbox('Intervention',interventions)
+st.sidebar.markdown('''Feature selection choice''')
+itvn = st.sidebar.selectbox('Make a selection',interventions)
+# Approach
+st.sidebar.markdown('''**Approach**''')
+st.sidebar.markdown(
+    '''* Trained logistic model to classfy mortgage refinance business \
+    opportunities based on census tracts''')
+st.sidebar.markdown(
+    '''* Used the model to predict opportunies and visualized them in an \
+    interactive maps to visualize refinance business opportunities for \
+    mortgage lenders.''')
+# Data
+st.sidebar.markdown('''**Data**''')
+st.sidebar.markdown(
+    '''* 2008-2017 mortgage transaction data, available via Home Mortgage \
+    Disclosure Act''')
+st.sidebar.markdown(
+    '''* Demographic data from 10-year Census American Community Survey data\
+    ''')
+st.sidebar.markdown('''* King County, WA selected for the demo project''')
 
 # finding the census tract that associated with zipcode
 @st.cache(persist=True, suppress_st_warning=True)
@@ -86,13 +108,13 @@ def get_tract(zipcode):
 def load_data(itvn):
     df = pd.read_csv(DATA_hmda_acs)
     ethical_related = df.columns[41:80]
-    if itvn == 'Non-human':
+    if itvn == 'Original':
         df.drop(
             ['loan_purpose_1', 'loan_purpose_2', 'loan_purpose_3'],
             axis=1,
             inplace=True
         )
-    elif itvn == 'Human-first':
+    elif itvn == 'Without Population Bias':
         df.drop(ethical_related, axis=1, inplace=True)
     df.rename(columns={'Unnamed: 0': 'census_tract_number'}, inplace=True)
     return df
@@ -183,7 +205,22 @@ def main():
 
 main()
 
+st.button("")
+st.text(" ")
+st.markdown('''<p style='text-align: left; color: teal; font-size: 28px'>\
+    Insights</p>''',
+    unsafe_allow_html=True)
 st.markdown(
-    '''If you have questions about or are interested in the project,
-       please feel free to contact me @meng.chen03(at)gmail.com.'''
+    '''<p style='text-align: left; color: black; font-size: 20px'><b>Top five \
+    important features</b> for identifying the mortgage refinance \
+    business opportunity: <b>a</b>, loan status (first-time purchase, \
+    refinance, or home renavation); <b>b</b>, marriage status (single vs \
+    married); <b>c</b>, loan purchaser (institution investors); <b>d</b>, \
+    minor (age less than 18 years old) population; <b>e</b>, work travel \
+    time (average time spent for a daily round-trip transportation).</p>''',
+    unsafe_allow_html=True)
+
+st.markdown(
+    '''If you have any questions or comments, please send email to \
+    meng.chen03(at)gmail.com.'''
 )
