@@ -51,10 +51,10 @@ itvn = st.sidebar.selectbox('Make a selection',interventions)
 # Approach
 st.sidebar.markdown('''**Approach**''')
 st.sidebar.markdown(
-    '''* Trained logistic model to classfy mortgage refinance business \
+    '''* Train logistic regression model to classfy mortgage refinance business \
     opportunities based on census tracts''')
 st.sidebar.markdown(
-    '''* Used the model to predict opportunies and visualized them in an \
+    '''* Implement the model to predict opportunies and visualized them in an \
     interactive maps to visualize refinance business opportunities for \
     mortgage lenders.''')
 # Data
@@ -208,7 +208,7 @@ main()
 st.button("")
 st.text(" ")
 st.markdown('''<p style='text-align: left; color: teal; font-size: 28px'>\
-    Insights</p>''',
+    Some insights about finding refinance business opportunities</p>''',
     unsafe_allow_html=True)
 st.markdown(
     '''<p style='text-align: left; color: black; font-size: 20px'><b>Top five \
