@@ -224,7 +224,7 @@ st.markdown(
     population; <b>E</b>, work travel time (average time spent for a daily \
     round-trip transportation).</p>''',
     unsafe_allow_html=True)
-
+st.text("")
 st.markdown(
     '''For details of the project, please vist [here]\
     (https://biomchen.github.io/intelliRefinder.html). If you have any \
