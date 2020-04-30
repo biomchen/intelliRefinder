@@ -52,7 +52,7 @@ itvn = st.sidebar.selectbox('Make a selection',interventions)
 st.sidebar.markdown('''**Approach**''')
 st.sidebar.markdown(
     '''* Train logistic regression model to classfy mortgage refinance business \
-    opportunities based on census tracts''')
+    opportunities based on census tracts.''')
 st.sidebar.markdown(
     '''* Implement the model to predict opportunies and visualize them in an \
     interactive maps for mortgage lenders.''')
