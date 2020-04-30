@@ -215,11 +215,11 @@ st.markdown(
     important features</b> for identifying the opportunities:</p>''',
     unsafe_allow_html=True)
 st.markdown(
-    '''<p style='text-align: left; color: black; font-size: 20px'><b>a</b>, \
+    '''<p style='text-align: left; color: black; font-size: 20px'><b>A</b>, \
     loan status (first-time purchase, refinance, or home renavation); \
-    <b>b</b>, marriage status (single vs married); <b>c</b>, loan purchaser \
-    (institution investors); <b>d</b>, minor (age less than 18 years old) \
-    population; <b>e</b>, work travel time (average time spent for a daily \
+    <b>B</b>, marriage status (single vs married); <b>C</b>, loan purchaser \
+    (institution investors); <b>D</b>, minor (age less than 18 years old) \
+    population; <b>E</b>, work travel time (average time spent for a daily \
     round-trip transportation).</p>''',
     unsafe_allow_html=True)
 
