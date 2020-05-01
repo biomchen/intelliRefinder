@@ -210,7 +210,7 @@ main()
 st.button("")
 st.text(" ")
 st.markdown('''<p style='text-align: left; color: black; font-size: 28px'>\
-    <b>Project insights</b></p>''',
+    Project insights</p>''',
     unsafe_allow_html=True)
 st.markdown(
     '''<p style='text-align: left; color: black; font-size: 20px'><b>Top five \
