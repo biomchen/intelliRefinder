@@ -210,7 +210,7 @@ main()
 st.button("")
 st.text(" ")
 st.markdown('''<p style='text-align: left; color: teal; font-size: 28px'>\
-    Insights of mortgage refinance business opportunities</p>''',
+    <b>Project insights</b></p>''',
     unsafe_allow_html=True)
 st.markdown(
     '''<p style='text-align: left; color: black; font-size: 20px'><b>Top five \
