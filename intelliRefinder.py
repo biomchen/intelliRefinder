@@ -217,7 +217,7 @@ st.markdown(
     important features</b> for identifying the opportunities:</p>''',
     unsafe_allow_html=True)
 st.markdown(
-    '''<p style='text-align: left; color: black; font-size: 20px'><b>A</b>, \
+    '''<p style='text-align: left; color: black; font-size: 19px'><b>A</b>, \
     loan status (first-time purchase, refinance, or home renavation); \
     <b>B</b>, marriage status (single vs married); <b>C</b>, loan purchaser \
     (institution investors); <b>D</b>, minor (age less than 18 years old) \
