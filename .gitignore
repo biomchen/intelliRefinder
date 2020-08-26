@@ -2,3 +2,6 @@
 data/
 .DS_Store
 notebooks/.ipynb_checkpoints/ird_modeling-checkpoint.ipynb
+notebooks/.ipynb_checkpoints/ird_acs-checkpoint.ipynb
+.ipynb_checkpoints/intelliRefinder-checkpoint.py
+notebooks/.ipynb_checkpoints/ird_hmda-checkpoint.ipynb
